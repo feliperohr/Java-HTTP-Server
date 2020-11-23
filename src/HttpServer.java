@@ -1,5 +1,5 @@
 import httpManager.request.HttpRequestHandler;
-import httpManager.response.HttpResponseMsg;
+import httpManager.response.HttpResponseHandler;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -7,15 +7,14 @@ import java.net.Socket;
 
 public class HttpServer {
 
-	final static int PORT = 80;
-	final static String MAIN_ROOT = "./public_html";
+	private final static int PORT = 80;
+	private final static String MAIN_ROOT = "./public_html";
 
 	public static void main(String[] args) {
 
 		try {
 			ServerSocket server = new ServerSocket(PORT);
-			HttpResponseMsg msg = HttpResponseMsg.getInstance();
-
+			HttpResponseHandler response = HttpResponseHandler.getInstance();
 
 			while (true) {
 
@@ -39,14 +38,14 @@ public class HttpServer {
 				if (method.equals("GET")) {
 
 					if(urlPath.equals("/manutencao")){
-						res = msg.getSimpleResponseMsg(503, "Service Unavailable");
+						res = response.getSimpleResponseMsg(503, "Service Unavailable");
 						out.write(res.getBytes());
 					}
 
 					if(urlPath.equals("/tea")){
 						File file = new File(MAIN_ROOT + urlPath+".html");
 
-						res = msg.getResponseWithData(200, "I'm a teapot", file);
+						res = response.getResponseWithData(200, "I'm a teapot", file);
 						out.write(res.getBytes());
 					}
 
@@ -56,11 +55,11 @@ public class HttpServer {
 						File file = new File(MAIN_ROOT + urlPath);
 
 						if (file.exists()) {
-							res = msg.getResponseWithData(200, "OK", file);
+							res = response.getResponseWithData(200, "OK", file);
 							out.write(res.getBytes());
 
 						}else {
-							res = msg.getSimpleResponseMsg(403, "Forbidden");
+							res = response.getSimpleResponseMsg(403, "Forbidden");
 							out.write(res.getBytes());
 						}
 
@@ -76,24 +75,24 @@ public class HttpServer {
 
 									File indexFile = new File(MAIN_ROOT + urlPath);
 
-									res = msg.getResponseWithData(200, "OK", indexFile);
+									res = response.getResponseWithData(200, "OK", indexFile);
 									out.write(res.getBytes());
 
 								}else {
-									res = msg.getResponseWithData(200, "OK", file);
+									res = response.getResponseWithData(200, "OK", file);
 									out.write(res.getBytes());
 								}
 
 								// get the file name in url and return the date.
 							}else {
-								res = msg.getResponseWithData(200, "OK", file);
+								res = response.getResponseWithData(200, "OK", file);
 								out.write(res.getBytes());
 
 							}
 
 
 						}else {
-							res = msg.getSimpleResponseMsg(404, "Not Found");
+							res = response.getSimpleResponseMsg(404, "Not Found");
 							out.write(res.getBytes());
 
 						}
@@ -124,10 +123,10 @@ public class HttpServer {
 							e.printStackTrace();
 						}
 
-						res = msg.getSimpleResponseMsg(201, "Created");
+						res = response.getSimpleResponseMsg(201, "Created");
 						out.write(res.getBytes());
 					}else{
-						res = msg.getSimpleResponseMsg(400, "Bad Request");
+						res = response.getSimpleResponseMsg(400, "Bad Request");
 						out.write(res.getBytes());
 					}
 
@@ -135,11 +134,11 @@ public class HttpServer {
 				} else if( method.equals("PUT") || method.equals("DELETE") || method.equals("HEAD") || method.equals("CONNECT") ||
 						method.equals("TRACE") || method.equals("OPTIONS") || method.equals("PATCH")) {
 
-					res = msg.getSimpleResponseMsg(501, "Not Implemented");
+					res = response.getSimpleResponseMsg(501, "Not Implemented");
 					out.write(res.getBytes());
 
 				}else {
-					res = msg.getSimpleResponseMsg(400, "Bad Request");
+					res = response.getSimpleResponseMsg(400, "Bad Request");
 					out.write(res.getBytes());
 				}
 

@@ -3,19 +3,18 @@ package httpManager.response;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 
-public class HttpResponseMsg implements HttpResponse{
+public class HttpResponseHandler implements HttpResponse{
 
-    private static HttpResponseMsg instance;
+    private static HttpResponseHandler instance;
 
-    private HttpResponseMsg() {
+    private HttpResponseHandler() {
 
     }
 
-    public static HttpResponseMsg getInstance(){
+    public static HttpResponseHandler getInstance(){
         if(instance == null)
-            instance = new HttpResponseMsg();
+            instance = new HttpResponseHandler();
 
         return instance;
     };
